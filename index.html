@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Store</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #1c1c1e;
+            --bg-tertiary: #2c2c2e;
+            --text-primary: #ffffff;
+            --text-secondary: #8e8e93;
+            --accent-blue: #0a84ff;
+            --accent-blue-hover: #0066cc;
+            --border-color: #38383a;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+        
+        /* Header */
+        .header {
+            background: rgba(28, 28, 30, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 12px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 0.5px solid var(--border-color);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo::before {
+            content: "";
+            margin-right: 8px;
+        }
+        
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 0;
+            padding: 0;
+            background: var(--bg-secondary);
+            overflow-x: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+            position: sticky;
+            top: 44px;
+            z-index: 999;
+            border-bottom: 0.5px solid var(--border-color);
+        }
+        
+        .nav-tabs::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .nav-tab {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 400;
+            white-space: nowrap;
+            padding: 16px 20px;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .nav-tab:hover {
+            color: var(--text-primary);
+        }
+        
+        .nav-tab.active {
+            color: var(--text-primary);
+            font-weight: 500;
+            border-bottom-color: var(--text-primary);
+        }
+        
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Hero Section */
+        .hero {
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            height: 400px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+        }
+        
+        .hero-content h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .hero-content p {
+            font-size: 20px;
+            opacity: 0.9;
+        }
+        
+        /* Search Bar */
+        .search-container {
+            margin-bottom: 30px;
+        }
+        
+        .search-bar {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        
+        .search-bar:focus-within {
+            background: var(--bg-tertiary);
+            border-color: var(--accent-blue);
+        }
+        
+        .search-icon {
+            font-size: 18px;
+            color: var(--text-secondary);
+        }
+        
+        .search-bar input {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 17px;
+            flex: 1;
+            outline: none;
+        }
+        
+        .search-bar input::placeholder {
+            color: var(--text-secondary);
+        }
+        
+        /* Category Pills */
+        .categories {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            scrollbar-width: none;
+        }
+        
+        .categories::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .category-pill {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .category-pill:hover,
+        .category-pill.active {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: white;
+        }
+        
+        /* Section Title */
+        .section {
+            margin-bottom: 50px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        
+        .see-all {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        /* App Grid */
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+        }
+        
+        /* App Card */
+        .app-card {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .app-card:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--text-secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .app-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 18px;
+            object-fit: cover;
+            background: var(--bg-tertiary);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .app-details {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .app-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .app-category {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .app-stats {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .stars {
+            color: #ffcc00;
+        }
+        
+        .download-btn {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 24px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .download-btn:hover {
+            background: var(--accent-blue-hover);
+            transform: scale(1.05);
+        }
+        
+        .download-btn:active {
+            transform: scale(0.98);
+        }
+        
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--bg-tertiary);
+            border-top-color: var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                height: 250px;
+            }
+            
+            .hero-content h1 {
+                font-size: 32px;
+            }
+            
+            .hero-content p {
+                font-size: 16px;
+            }
+            
+            .app-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-title {
+                font-size: 24px;
+            }
+            
+            .nav-tab {
+                font-size: 18px;
+                padding: 14px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">App Store</div>
+            <div style="color: var(--text-secondary); font-size: 14px;">For Android</div>
+        </div>
+    </div>
+    
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+        <a class="nav-tab active" data-tab="today">Today</a>
+        <a class="nav-tab" data-tab="apps">Apps</a>
+        <a class="nav-tab" data-tab="games">Games</a>
+        <a class="nav-tab" data-tab="top">Top Charts</a>
+        <a class="nav-tab" data-tab="search">Search</a>
+    </div>
+    
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="hero-content">
+                <h1>Discover Amazing Apps</h1>
+                <p>The best Android apps, all in one place</p>
+            </div>
+        </div>
+        
+        <!-- Search Bar -->
+        <div class="search-container">
+            <div class="search-bar">
+                <span class="search-icon">🔍</span>
+                <input type="text" placeholder="Search apps, games and more..." id="searchInput">
+            </div>
+        </div>
+        
+        <!-- Categories -->
+        <div class="categories">
+            <div class="category-pill active" data-category="all">All</div>
+            <div class="category-pill" data-category="Social">Social</div>
+            <div class="category-pill" data-category="Payment">Payment</div>
+            <div class="category-pill" data-category="Shopping">Shopping</div>
+            <div class="category-pill" data-category="Games">Games</div>
+            <div class="category-pill" data-category="Tools">Tools</div>
+            <div class="category-pill" data-category="Entertainment">Entertainment</div>
+        </div>
+        
+        <!-- Featured Apps Section -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Featured Apps</h2>
+                <a href="#" class="see-all">See All →</a>
+            </div>
+            <div class="app-grid" id="appGrid">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    Loading amazing apps...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let apps = [];
+        let currentCategory = 'all';
+        
+        // Sample apps (replace with your GitHub data later)
+        const sampleApps = [
+            {
+                name: "WhatsApp Messenger",
+                category: "Social",
+                icon: "https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg",
+                rating: 4.7,
+                downloads: "5B+",
+                apk: "#"
+            },
+            {
+                name: "Instagram",
+                category: "Social",
+                icon: "https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg",
+                rating: 4.5,
+                downloads: "2B+",
+                apk: "#"
+            },
+            {
+                name: "Google Pay",
+                category: "Payment",
+                icon: "https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg",
+                rating: 4.6,
+                downloads: "500M+",
+                apk: "#"
+            },
+            {
+                name: "Amazon Shopping",
+                category: "Shopping",
+                icon: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
+                rating: 4.4,
+                downloads: "100M+",
+                apk: "#"
+            },
+            {
+                name: "Spotify",
+                category: "Entertainment",
+                icon: "https://upload.wikimedia.org/wikipedia/commons/8/84/Spotify_icon.svg",
+                rating: 4.6,
+                downloads: "500M+",
+                apk: "#"
+            },
+            {
+                name: "TikTok",
+                category: "Social",
+                icon: "https://sf16-website-login.neutral.ttwstatic.com/obj/tiktok_web_login_static/tiktok/webapp/main/webapp-desktop/8152caf0c8e8bc67ae0d.png",
+                rating: 4.5,
+                downloads: "1B+",
+                apk: "#"
+            }
+        ];
+        
+        // Load apps from GitHub (or use sample data)
+        async function loadApps() {
+            try {
+                // Try to load from GitHub
+                const response = await fetch('https://api.github.com/repos/YOUR_USERNAME/android-app-store/contents/apps');
+                const files = await response.json();
+                
+                if (files.message) throw new Error('Repo not found');
+                
+                apps = await Promise.all(
+                    files.filter(f => f.name.endsWith('.md')).map(async file => {
+                        const content = await fetch(file.download_url).then(r => r.text());
+                        return parseApp(content);
+                    })
+                );
+            } catch (error) {
+                // Use sample apps if GitHub fails
+                console.log('Using sample apps');
+                apps = sampleApps;
+            }
+            
+            renderApps();
+        }
+        
+        function parseApp(markdown) {
+            const lines = markdown.split('\n');
+            const app = {};
+            
+            lines.forEach(line => {
+                if (line.startsWith('title:')) app.name = line.split('title:')[1].trim();
+                if (line.startsWith('category:')) app.category = line.split('category:')[1].trim();
+                if (line.startsWith('icon:')) app.icon = line.split('icon:')[1].trim();
+                if (line.startsWith('apk:')) app.apk = line.split('apk:')[1].trim();
+                if (line.startsWith('rating:')) app.rating = parseFloat(line.split('rating:')[1].trim());
+                if (line.startsWith('downloads:')) app.downloads = line.split('downloads:')[1].trim();
+            });
+            
+            return app;
+        }
+        
+        function renderApps(filterQuery = '') {
+            const filteredApps = apps.filter(app => {
+                const matchesCategory = currentCategory === 'all' || app.category === currentCategory;
+                const matchesSearch = filterQuery === '' || 
+                    app.name.toLowerCase().includes(filterQuery.toLowerCase()) ||
+                    app.category.toLowerCase().includes(filterQuery.toLowerCase());
+                return matchesCategory && matchesSearch;
+            });
+            
+            const grid = document.getElementById('appGrid');
+            
+            if (filteredApps.length === 0) {
+                grid.innerHTML = '<div class="loading">No apps found</div>';
+                return;
+            }
+            
+            grid.innerHTML = filteredApps.map(app => `
+                <div class="app-card">
+                    <img class="app-icon" 
+                         src="${app.icon}" 
+                         alt="${app.name}"
+                         onerror="this.src='https://via.placeholder.com/80/2c2c2e/fff?text=${app.name.charAt(0)}'">
+                    <div class="app-details">
+                        <div class="app-name">${app.name}</div>
+                        <div class="app-category">${app.category}</div>
+                        <div class="app-stats">
+                            <div class="rating">
+                                <span class="stars">⭐</span>
+                                <span>${app.rating || '4.5'}</span>
+                            </div>
+                            <span>•</span>
+                            <span>${app.downloads || '1K+'}</span>
+                        </div>
+                    </div>
+                    <button class="download-btn" onclick="downloadApp('${app.apk}', '${app.name}')">
+                        GET
+                    </button>
+                </div>
+            `).join('');
+        }
+        
+        function downloadApp(apkUrl, appName) {
+            if (apkUrl === '#') {
+                alert('Sample app - Add real APK files via admin panel!');
+                return;
+            }
+            
+            const a = document.createElement('a');
+            a.href = apkUrl;
+            a.download = `${appName}.apk`;
+            a.click();
+        }
+        
+        // Category filter
+        document.querySelectorAll('.category-pill').forEach(pill => {
+            pill.addEventListener('click', () => {
+                document.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
+                pill.classList.add('active');
+                currentCategory = pill.dataset.category;
+                renderApps(document.getElementById('searchInput').value);
+            });
+        });
+        
+        // Search
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            renderApps(e.target.value);
+        });
+        
+        // Tab switching
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+        
+        // Load apps on page load
+        loadApps();
+    </script>
+</body>
+  </html>
